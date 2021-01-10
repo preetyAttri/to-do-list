@@ -2,29 +2,24 @@ import React, {useEffect, useRef} from 'react';
 import AddOutlinedIcon from '@material-ui/icons/AddOutlined';
 import InputAdornment from "@material-ui/core/InputAdornment";
 import TextField from "@material-ui/core/TextField";
-import { connect } from 'react-redux';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { useSelector, useDispatch } from 'react-redux';
 
-import ListItem from './ListItem';
+import ListItem from './listItem';
 import {
     actionForGetTaskList,
     actionForCreateTask,
-} from '../redux-saga/action';
+} from '../../redux-saga/action';
 
 /* 
     main list component
 */
-const ListComponent = ({
-    getTaskList, 
-    listData,
-    createTask,
-    loading
-}) => {
+const ListComponent = () => {
     let textInput = useRef(null);
-
+    const listData = useSelector((state) => state.taskList)
+    const dispatch = useDispatch()
     useEffect(() => {
-        getTaskList();
-    }, [getTaskList]);
+        dispatch(actionForGetTaskList());
+    }, [dispatch]);
     return (
         <div className="listContainer">
             <TextField
@@ -41,39 +36,22 @@ const ListComponent = ({
                 )
                 }}
                 onKeyPress={(event) => {
-                    if (event.code == "Enter" && event.target.value.trim()) {
-                        createTask(event.target.value);
+                    if (event.charCode === 13 && event.target.value.trim()) {
+                        dispatch(actionForCreateTask(event.target.value));
                         textInput.current.value = "";
-                    } else if(event.code == "Enter") {
+                    } else if(event.charCode === 13) {
                         // eslint-disable-next-line no-undef
                         alert("Cannot add empty string")
                     }
                 }}
             />
-            <>
-                {listData.map((listItem) => {
-                    return (
-                      <ListItem listItem={listItem} key={listItem.id} />
-                    )
-                })}
-                
-            </>
-            {loading && <CircularProgress  color="secondary" />}
+            {listData.map((listItem) => {
+                return (
+                    <ListItem listItem={listItem} key={listItem.id} />
+                )
+            })}
         </div>
     )
 }
 
-const mapStateToProps = state => {
-    return {
-        listData: state.taskList,
-        loading: state.loading
-    }
-}
-
-const mapDispatchToProps = dispatch => ({
-    getTaskList: data => dispatch(actionForGetTaskList(data)),
-    createTask: data => dispatch(actionForCreateTask(data)),
-})
-
-const wrapper = connect(mapStateToProps, mapDispatchToProps)(ListComponent)
-export default wrapper
+export default ListComponent;

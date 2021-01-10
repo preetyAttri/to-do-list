@@ -20,14 +20,16 @@ function parseJSON(response) {
  * @return {object|undefined} Returns either the response, or throws an error
  */
 function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  } else if (response.status >= 400 && response.status <= 500) {
-    return response;
-  }
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error;
+    try {
+        if (response.status >= 200 && response.status < 300 || response.status >= 400 && response.status <= 500) {
+            return response;
+        } 
+        const error = new Error(response?.statusText);
+        error.response = response;
+        throw error;
+    } catch(error) {
+        throw error;
+    }
 }
 
 /**
@@ -50,5 +52,10 @@ export default async function request(url, options) {
     }
   }
   // eslint-disable-next-line no-undef
-  return fetch(url, option).then(checkStatus).then(parseJSON);
+  return fetch(url, option)
+    .then(checkStatus)
+    .then(parseJSON)
+    .catch(error => {
+        return error;
+    });
 }

@@ -67,6 +67,9 @@
 .list:hover .delete {
   visibility: visible;
 }
+.showDeleteIcon{
+  visibility: visible;
+}
 
 .listContainer {
   margin-top: 2rem;

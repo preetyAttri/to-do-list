@@ -12,7 +12,6 @@ import {
     actionForSetLoading,
     actionForGetTaskListSuccess,
     actionForGetTaskListError,
-    actionForGetTaskList,
     actionForCreateTaskSuccess,
     actionForCreateTaskError,
     actionForUpdateTaskSuccess,
@@ -24,28 +23,17 @@ import {
 } from './action.js';
 import config from '../config';
 import request from '../utils/request';
-
+const {api_url, userId} = config;
 /*
     saga genrator function created for getting task list
 */
 function* SagaForGetTaskList() {
   try {
     yield put(actionForSetLoading(true));
-    const url = `${config.api_url}api/v1/users/94/tasks`;
+    const url = `${api_url}api/v1/users/${userId}/tasks`;
     const result = yield call(request, url, { method: 'GET' })
     if (result) {
-        const sortedList = result.sort((a, b) => {
-            if(a.completed_at && b.completed_at) {
-                return new Date(a.completed_at) - new Date(b.completed_at)
-            } else if(a.completed_at) {
-                return 1
-            } else if(b.completed_at) {
-                return -1
-            } else {
-                return new Date(b.created_at) - new Date(a.created_at)
-            }
-        })
-        yield put(actionForGetTaskListSuccess(sortedList))
+        yield put(actionForGetTaskListSuccess(result))
     } else {
         yield put(actionForGetTaskListError(result))
     }
@@ -61,7 +49,7 @@ function* SagaForGetTaskList() {
 function* SagaForCreateTask({data}) {
     try {
       yield put(actionForSetLoading(true));
-      const url = `${config.api_url}api/v1/users/94/tasks`;
+      const url = `${api_url}api/v1/users/${userId}/tasks`;
       const body = {
         task: {
             description: data
@@ -70,7 +58,6 @@ function* SagaForCreateTask({data}) {
       const result = yield call(request, url, { method: 'POST', body: body })
       if (result) {
         yield put(actionForCreateTaskSuccess(result))
-        yield put(actionForGetTaskList())
       } else {
         yield put(actionForCreateTaskError(result))
       }
@@ -86,7 +73,7 @@ function* SagaForCreateTask({data}) {
 function* SagaForUpdateTask({data}) {
     try {
         yield put(actionForSetLoading(true));
-        const url = `${config.api_url}api/v1/users/94/tasks/${data.id}`;
+        const url = `${api_url}api/v1/users/${userId}/tasks/${data.id}`;
         const body = {
             task: {
                 description: data.value
@@ -95,7 +82,6 @@ function* SagaForUpdateTask({data}) {
         const result = yield call(request, url, { method: 'PUT', body: body })
         if (result) {
             yield put(actionForUpdateTaskSuccess(result))
-            yield put(actionForGetTaskList())
         } else {
             yield put(actionForUpdateTaskError(result))
         }
@@ -111,11 +97,11 @@ function* SagaForUpdateTask({data}) {
 function* SagaForDeleteTask({data}) {
     try {
         yield put(actionForSetLoading(true));
-        const url = `${config.api_url}api/v1/users/94/tasks/${data.id}`;
+        const url = `${api_url}api/v1/users/${userId}/tasks/${data.id}`;
         const result = yield call(request, url, { method: 'DELETE'})
         if (result) {
-            yield put(actionForDeleteTaskSuccess(result))
-            yield put(actionForGetTaskList())
+            console.log('@@@result', result)
+            yield put(actionForDeleteTaskSuccess(data.id))
         } else {
             yield put(actionForDeleteTaskError(result))
         }
@@ -131,11 +117,10 @@ function* SagaForDeleteTask({data}) {
 function* SagaForChangeTaskStatus({data}) {
     try {
         yield put(actionForSetLoading(true));
-        const url = `${config.api_url}api/v1/users/94/tasks/${data.id}/${data.status}`;
+        const url = `${api_url}api/v1/users/${userId}/tasks/${data.id}/${data.status}`;
         const result = yield call(request, url, { method: 'PUT'})
         if (result) {
             yield put(actionForChangeTaskStatusSuccess(result))
-            yield put(actionForGetTaskList())
         } else {
             yield put(actionForChangeTaskStatusError(result))
         }
