@@ -1,4 +1,4 @@
-import { call, put, takeLatest, all } from 'redux-saga/effects';
+import { call, put, takeEvery, all } from 'redux-saga/effects';
 import {
   GET_TASK_LIST,
   CREATE_TASK,
@@ -100,7 +100,6 @@ function* SagaForDeleteTask({data}) {
         const url = `${api_url}api/v1/users/${userId}/tasks/${data.id}`;
         const result = yield call(request, url, { method: 'DELETE'})
         if (result) {
-            console.log('@@@result', result)
             yield put(actionForDeleteTaskSuccess(data.id))
         } else {
             yield put(actionForDeleteTaskError(result))
@@ -136,10 +135,10 @@ function* SagaForChangeTaskStatus({data}) {
 */
 export default function* rootSaga() {
   yield all([
-    takeLatest(GET_TASK_LIST, SagaForGetTaskList),
-    takeLatest(CREATE_TASK, SagaForCreateTask),
-    takeLatest(UPDATE_TASK, SagaForUpdateTask),
-    takeLatest(DELETE_TASK, SagaForDeleteTask),
-    takeLatest(CHANGE_TASK_STATUS, SagaForChangeTaskStatus),
+    takeEvery(GET_TASK_LIST, SagaForGetTaskList),
+    takeEvery(CREATE_TASK, SagaForCreateTask),
+    takeEvery(UPDATE_TASK, SagaForUpdateTask),
+    takeEvery(DELETE_TASK, SagaForDeleteTask),
+    takeEvery(CHANGE_TASK_STATUS, SagaForChangeTaskStatus),
   ]);
 }
