@@ -36,3 +36,56 @@
     transform: rotate(360deg);
   }
 }
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  flex: 1
+}
+
+.list {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+}
+.list div {
+  flex: 1;
+}
+.listContainerHeader {
+  width: 50%;
+  display: flex;
+  align-self: center;
+}
+.listContainerHeader input {
+  padding: 1rem 0rem !important;
+  color: '#EB5757';
+}
+.delete {
+  visibility: hidden;
+}
+.list:hover .delete {
+  visibility: visible;
+}
+
+.listContainer {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.MuiCircularProgress-root  {
+  position: absolute;
+  left: 50%;
+  top: 50%
+}
+
+@media screen and (max-width: 768px) {
+  .list {
+    width: 90%;
+  }
+  .listContainerHeader {
+    width: 90%;
+  }
+}
