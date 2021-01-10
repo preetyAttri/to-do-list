@@ -24,7 +24,7 @@ const ListComponent = () => {
     }, [dispatch]);
 
     const addTask = useCallback(() => {
-        if (text.trim()) {
+        if (text?.trim()) {
             dispatch(actionForCreateTask(text));
             textInput.current.value = "";
         } else{
