@@ -33,11 +33,13 @@ const findindex = (array, id) => {
 const sortList = (array) => {
     return array.sort((a, b) => {
         if(a.completed_at && b.completed_at) {
-            return new Date(a.updated_at) - new Date(b.updated_at)
+            return new Date(a.completed_at) - new Date(b.completed_at)
         } else if(a.completed_at) {
             return 1
         } else if(b.completed_at) {
             return -1
+        } else if(a.updated_at && b.updated_at) {
+            return new Date(b.updated_at) - new Date(a.updated_at)
         } else {
             return new Date(b.created_at) - new Date(a.created_at)
         }
