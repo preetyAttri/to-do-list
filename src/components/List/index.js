@@ -27,6 +27,7 @@ const ListComponent = () => {
         if (text?.trim()) {
             dispatch(actionForCreateTask(text));
             textInput.current.value = "";
+            setText('');
         } else{
             // eslint-disable-next-line no-undef
             alert("Cannot add empty string")
