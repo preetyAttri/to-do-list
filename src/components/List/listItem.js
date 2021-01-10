@@ -57,7 +57,7 @@ const ListItem = ({
                     disableUnderline
                     inputRef={inputRef}
                     onChange={(event) => setText(event.target.value)}
-                    style={{ color: listItem.completed_at ? 'grey' : 'black', textDecoration: listItem.completed_at ? 'line-through' : 'auto'}}
+                    style={{ color: listItem.completed_at ? 'grey' : 'black', textDecoration: listItem.completed_at ? 'line-through' : 'none'}}
                     onKeyPress={onKeyPress}
                 />
             </div>
